@@ -59,43 +59,39 @@ public class MemberDao {
       }
    }
    public boolean update(MemberDto dto) {
-	      //필요한 값을 담을 지역 변수 미리 만들기
-	      Connection conn = null;
-	      PreparedStatement pstmt = null;
-	      int flag = 0;
-	      try {
-	         //Connection 객체의 참조값
-	         conn = new DbcpBean().getConn();
-	         //실행할 sql 문
-	         String sql = "UPDATE member"
-	               + " SET name=?, addr=?"
-	               + " WHERE num=?";
-	         //PreparedStatement 객체의 참조값
-	         pstmt = conn.prepareStatement(sql);
-	         // ? 에 값 바인딩하기 
-	         pstmt.setString(1, dto.getName());
-	         pstmt.setString(2, dto.getAddr());
-	         pstmt.setInt(3, dto.getNum());
-	         //sql 문 수행하고 변화된 row 의 갯수 리턴 받기
-	         flag = pstmt.executeUpdate();
-	      } catch (Exception e) {
-	         e.printStackTrace();
-	      } finally {
-	         try {
-	            if (pstmt != null)
-	               pstmt.close();
-	            if (conn != null)
-	               conn.close();
-	         } catch (Exception e) {
-	         }
-	      }
-	      //작업의 성공 여부를 리턴해 준다.
-	      if (flag > 0) {
-	         return true;
-	      } else {
-	         return false;
-	      }
-	   }
+      Connection conn = null;
+      PreparedStatement pstmt = null;
+      int flag = 0;
+      try {
+         conn = new DbcpBean().getConn();
+         //실행할 sql 문 준비하기
+         String sql = "UPDATE member"
+               + " SET name=?, addr=?"
+               + " WHERE num=?";
+         pstmt = conn.prepareStatement(sql);
+         //? 에 값 바인딩하기
+         pstmt.setString(1, dto.getName());
+         pstmt.setString(2, dto.getAddr());
+         pstmt.setInt(3, dto.getNum());
+         //sql 문 수행하고 변화된 row 의 갯수 리턴 받기
+         flag = pstmt.executeUpdate();
+      } catch (Exception e) {
+         e.printStackTrace();
+      } finally {
+         try {
+            if (pstmt != null)
+               pstmt.close();
+            if (conn != null)
+               conn.close();
+         } catch (Exception e) {
+         }
+      }
+      if (flag > 0) {
+         return true;
+      } else {
+         return false;
+      }
+   }
    public boolean delete(int num) {
       Connection conn = null;
       PreparedStatement pstmt = null;
@@ -166,6 +162,8 @@ public class MemberDao {
       }
       return dto;
    }
+
+   
    public List<MemberDto> selectAll(){
       List<MemberDto> list=new ArrayList<MemberDto>();
       
@@ -204,6 +202,57 @@ public class MemberDao {
          } catch (Exception e) {
          }
       }
+
+      
       return list;
    }
+   // dto 에 들어 있는 startRowNum 과 endRowNum 을 이용해서 목록을 리턴하는 메소드 
+   public List<MemberDto> getList(MemberDto dto){
+      List<MemberDto> list=new ArrayList<MemberDto>();
+      
+      Connection conn = null;
+      PreparedStatement pstmt = null;
+      ResultSet rs = null;
+      try {
+         //Connection 객체의 참조값 얻어오기 
+         conn = new DbcpBean().getConn();
+         //실행할 sql 문 준비
+         String sql = "SELECT *" + 
+               " FROM" + 
+               "   (SELECT result1.*, ROWNUM rnum" + 
+               "   FROM" + 
+               "      (SELECT num,name,addr" + 
+               "      FROM member" + 
+               "      ORDER BY num ASC) result1)" + 
+               " WHERE rnum BETWEEN ? AND ?";
+         pstmt = conn.prepareStatement(sql);
+         //? 에 값 바인딩하기
+         pstmt.setInt(1, dto.getStartRowNum());
+         pstmt.setInt(2, dto.getEndRowNum());
+         //query 문 수행하고 결과 받아오기 
+         rs = pstmt.executeQuery();
+         while (rs.next()) {
+            MemberDto dto2=new MemberDto();
+            dto2.setNum(rs.getInt("num"));
+            dto2.setName(rs.getString("name"));
+            dto2.setAddr(rs.getString("addr"));
+            list.add(dto2);
+         }
+      } catch (Exception e) {
+         e.printStackTrace();
+      } finally {
+         try {
+            if (rs != null)
+               rs.close();
+            if (pstmt != null)
+               pstmt.close();
+            if (conn != null)
+               conn.close();
+         } catch (Exception e) {
+         }
+      }
+
+      
+      return list;
+   }   
 }

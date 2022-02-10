@@ -8,7 +8,7 @@
       thisPage="";
    }
 %>    
-<div class="navbar bg-primary navbar-dark navbar-expand-sm">
+<div class="navbar bg-dark navbar-dark navbar-expand-sm">
    <div class="container">
       <a class="navbar-brand" href="${pageContext.request.contextPath }/index.jsp">Acorn</a>   
       <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#topNav">

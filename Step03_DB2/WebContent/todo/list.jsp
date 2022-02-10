@@ -17,7 +17,7 @@
 </head>
 <body>
 <jsp:include page="/include/navbar.jsp">
-	<jsp:param value="member"name=thisPage"/>
+	<jsp:param value="todo" name="thisPage"/>
 </jsp:include>
 	<div class="container">
 		<div class="p-3 mb-2 bg-secondary text-white">
