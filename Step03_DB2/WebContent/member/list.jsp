@@ -18,6 +18,18 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </head>
 <body>
+<%--
+	include 된 jsp 페이지에 필요한 파라미터를 include 할때 전달할수 있다.
+	
+	<jsp:param value="전달할 문자열" name="파라미터명"/>
+	
+	이렇게 전달한 정보는 HttpServletRequest 객체에 파라미터 정보로 저장이 되기 때문에
+	
+	include 된 jsp 페이지에서 request.getParameter("파라미터명") 과 같은 방법으로 해당 문자열을 추출할 수 있다.
+ --%>
+<jsp:include page="/include/navbar.jsp">
+	<jsp:param value="member" name="thisPage"/>
+</jsp:include>
 <div class="container">
 	<a href="insertform.jsp" style="font-size:2rem; color:green;">
 		<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
@@ -26,7 +38,7 @@
 		</svg>
 	</a>
 	<h1>회원 목록 입니다.</h1>
-	<table class="table table-striped">
+	<table class="table table-info table-striped table-hover">
 		<thead class="table-dark">
 			<tr>
 				<th>번호</th>
@@ -56,5 +68,6 @@
 		</tbody>
 	</table>
 </div>
+<jsp:include page="/include/footer.jsp"></jsp:include>
 </body>
 </html>
