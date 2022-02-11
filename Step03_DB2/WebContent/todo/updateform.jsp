@@ -19,6 +19,13 @@
 </head>
 <body>
 <div class="container">
+	<nav>
+	  <ol class="breadcrumb">
+	    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath }/">Home</a></li>
+	    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath }/todo/list.jsp">스케줄목록</a></li>
+	    <li class="breadcrumb-item active">스케줄 수정</li>
+	  </ol>
+	</nav>
   <div class="p-3 mb-2 bg-primary text-white">
    <h1>무엇을 수정할건가요?</h1>
    </div>
@@ -54,5 +61,6 @@
          </form>
       </div>
 </div>
+<jsp:include page="/include/footer.jsp"></jsp:include>
 </body>
 </html>

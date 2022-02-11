@@ -162,8 +162,6 @@ public class MemberDao {
       }
       return dto;
    }
-
-   
    public List<MemberDto> selectAll(){
       List<MemberDto> list=new ArrayList<MemberDto>();
       
@@ -292,5 +290,3 @@ public class MemberDao {
       return count;
    }
 }
-
-	
