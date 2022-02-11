@@ -255,4 +255,42 @@ public class MemberDao {
       
       return list;
    }   
+   // member 테이블의 전체 row 의 갯수를 리턴하는 메소드
+   public int getCount() {
+   
+      int count=0;
+      Connection conn = null;
+      PreparedStatement pstmt = null;
+      ResultSet rs = null;
+      try {
+         //Connection 객체의 참조값 얻어오기 
+         conn = new DbcpBean().getConn();
+         //실행할 sql 문 준비
+         String sql = "SELECT MAX(ROWNUM) AS num FROM member";
+         pstmt = conn.prepareStatement(sql);
+         //? 에 값 바인딩하기
+
+         //query 문 수행하고 결과 받아오기 
+         rs = pstmt.executeQuery();
+         if(rs.next()) {
+            count=rs.getInt("num");
+         }
+      } catch (Exception e) {
+         e.printStackTrace();
+      } finally {
+         try {
+            if (rs != null)
+               rs.close();
+            if (pstmt != null)
+               pstmt.close();
+            if (conn != null)
+               conn.close();
+         } catch (Exception e) {
+         }
+      }
+
+      return count;
+   }
 }
+
+	

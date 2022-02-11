@@ -5,9 +5,9 @@
     pageEncoding="UTF-8"%>
 <%
 	//한 페이지에 몇개씩 표시할 것인지
-	final int PAGE_ROW_COUNT=5;
+	final int PAGE_ROW_COUNT=10;
 	//하단 페이지를 몇개씩 표시할 것인지
-	final int PAGE_DISPLAY_COUNT=5;
+	final int PAGE_DISPLAY_COUNT=10;
 	
 	//보여줄 페이지의 번호를 일단 1이라고 초기값 지정
 	int pageNum=1;
@@ -33,8 +33,21 @@
 	MemberDao dao=MemberDao.getInstance();
 	//회원 목록 얻어오기 
 	List<MemberDto> list=dao.getList(dto);
-
-%>    
+	
+	//하단 시작 페이지 번호 
+	int startPageNum = 1 + ((pageNum-1)/PAGE_DISPLAY_COUNT)*PAGE_DISPLAY_COUNT;
+	//하단 끝 페이지 번호
+	int endPageNum=startPageNum+PAGE_DISPLAY_COUNT-1;
+	
+	//전체 row 의 갯수
+	int totalRow=MemberDao.getInstance().getCount();
+	//전체 페이지의 갯수 구하기
+	int totalPageCount=(int)Math.ceil(totalRow/(double)PAGE_ROW_COUNT);
+	//출력할 끝 페이지 번호가 전체 페이지 갯수보다 크게 계산된거라면 잘못된 값이다.
+	if(endPageNum > totalPageCount){
+		endPageNum=totalPageCount; //보정해준다.
+	}
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,7 +69,13 @@
 <jsp:include page="/include/navbar.jsp">
 	<jsp:param value="member" name="thisPage"/>
 </jsp:include>
-<div class="container">
+	<div class="container">
+	<nav>
+	  <ol class="breadcrumb">
+	    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath }">Home</a></li>
+	    <li class="breadcrumb-item active">회원목록</li>
+	  </ol>
+	</nav>
 	<a href="insertform.jsp" style="font-size:2rem; color:green;">
 		<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
   			<path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -94,15 +113,31 @@
 		</tbody>
 	</table>
 	<ul class="pagination">
-      <%for(int i=1; i<=5 ; i++){ %>
+		<%if(startPageNum != 1){ %>
+		<li class="page-item">
+			<a class="page-link" href="list.jsp?pageNum=<%=startPageNum-1 %>">&laquo;</a>
+		</li>
+		<%}else{ %>
+			<li class="page-item disabled">
+				<span class="page-link">&laquo;</span>
+			</li>
+		<%} %>
+      <%for(int i=startPageNum; i<=endPageNum ; i++){ %>
          <li class="page-item <%= i==pageNum ? "active":"" %>">
             <a class="page-link" href="list.jsp?pageNum=<%=i %>"><%=i %></a>
          </li>
       <%} %>
-      <li>
-      	<a href=""></a>
+      <%if(endPageNum < totalPageCount){ %>
+      <li class="page-item">
+      	<a class="page-link" href="list.jsp?pageNum=<%=endPageNum+1 %>">&raquo;</a>
       </li>
+      <%}else{ %>
+      	<li class="page-item disabled">
+			<span class="page-link">&raquo;</span>
+		</li>
+      <%} %>
    </ul>
+   <p> &gt; &lt; &laquo; &raquo; &larr; &rarr; &amp; &quot; &nbsp; </p>
 </div>
 <jsp:include page="/include/footer.jsp"></jsp:include>
 </body>

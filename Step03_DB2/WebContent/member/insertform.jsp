@@ -10,6 +10,17 @@
 </head>
 <body>
 <div class="container">
+	<jsp:include page="/include/navbar.jsp">
+		<jsp:param value="member" name="thisPage"/>
+	</jsp:include>
+	<div class="container">
+	<nav>
+	  <ol class="breadcrumb">
+	    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath }/">Home</a></li>
+	    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath }/member/list/.jsp">회원목록</a></li>
+	    <li class="breadcrumb-item active">회원 추가</li>
+	  </ol>
+	</nav>
    <h1>회원 추가 양식</h1>
    <div>
    		<div class="col-lg-6">
