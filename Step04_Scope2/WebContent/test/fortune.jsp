@@ -12,5 +12,6 @@
 		String fortuneToday=(String)request.getAttribute("fortuneToday");
 	%>
 	<h1>오늘의 운세: <strong><%=fortuneToday %></strong></h1>
+	<a href="test/fortune.jsp">request 영역에 담은 내용이 진짜 사라 졌나?</a>
 </body>
 </html>
