@@ -18,6 +18,49 @@ public class UsersDao {
 		}
 		return dao;
 	}
+	
+	//인자로 전달된 아이디에 해당하는 가입정보를 리턴해주는 메소드
+	public UsersDto getData(String id) {
+		//회원 정보를 담을 UsersDto 
+		UsersDto dto=null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = new DbcpBean().getConn();
+			//select 문 작성
+			String sql = "SELECT pwd,email,profile,regdate"
+					+ " FROM users"
+					+ " WHERE id=?";
+			pstmt = conn.prepareStatement(sql);
+			// ? 에 바인딩 할게 있으면 여기서 바인딩한다.
+			pstmt.setString(1, id);
+			//select 문 수행하고 ResultSet 받아오기
+			rs = pstmt.executeQuery();
+			//while문 혹은 if문에서 ResultSet 으로 부터 data 추출
+			if (rs.next()) {
+				dto=new UsersDto();
+				dto.setId(id);
+	            dto.setPwd(rs.getString("pwd"));
+	            dto.setEmail(rs.getString("email"));
+	            dto.setProfile(rs.getString("profile"));
+	            dto.setRegdate(rs.getString("regdate"));
+			}
+	} catch (Exception e) {
+	         e.printStackTrace();
+	      } finally {
+	         try {
+	            if (rs != null)
+	               rs.close();
+	            if (pstmt != null)
+	               pstmt.close();
+	            if (conn != null)
+	               conn.close();
+	         } catch (Exception e) {
+	         }
+	      }
+	      return dto;
+	   }
 	//인자로 전달되는 dto에 있는 id,pwd가 유효한 정보인지 여부를 리턴해주는 메소드
 	public boolean isValid(UsersDto dto) {
 		//맞는 정보인지 여부를 담을 지역변수를 선언하고 초기값 false 넣어주기
@@ -69,6 +112,41 @@ public class UsersDao {
 			pstmt.setString(2, dto.getPwd());
 			pstmt.setString(3, dto.getEmail());
 			flag = pstmt.executeUpdate(); //sql 문 실행하고 변화된 row 갯수 리턴 받기
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+			}
+		}
+		if (flag > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	//회원 비밀번호를 변경할 메소드
+	public boolean updatepwd(UsersDto dto) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int flag = 0;
+		try {
+			conn = new DbcpBean().getConn();
+			//실행할 sql 문 준비하기
+			String sql = "UPDATE users"
+					+ " SET pwd=?"
+					+ " WHERE id=? AND pwd=?";
+			pstmt = conn.prepareStatement(sql);
+			//? 에 값 바인딩하기
+			pstmt.setString(1, dto.getNewPwd());
+			pstmt.setString(2, dto.getId());
+			pstmt.setString(3, dto.getPwd());
+			//sql 문 수행하고 변화된 row 의 갯수 리턴 받기
+			flag = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
