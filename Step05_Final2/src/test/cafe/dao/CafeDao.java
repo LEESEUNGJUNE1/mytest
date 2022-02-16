@@ -278,9 +278,13 @@ public class CafeDao {
       try {
          conn = new DbcpBean().getConn();
          //select 문 작성
-         String sql = "SELECT writer,title,content,viewCount,regdate"
-               + " FROM board_cafe"
-               + " WHERE num=?";
+         String sql = "SELECT *" + 
+               " FROM" + 
+               "   (SELECT num, writer, title, content, viewCount, regdate," + 
+               "   LEAD(num, 1, 0) OVER(ORDER BY num DESC) AS prevNum," + 
+               "   LAG(num, 1, 0) OVER(ORDER BY num DESC) AS nextNum" + 
+               "   FROM board_cafe)" + 
+               " WHERE num=?";
          pstmt = conn.prepareStatement(sql);
          // ? 에 바인딩 할게 있으면 여기서 바인딩한다.
          pstmt.setInt(1, num);
@@ -295,6 +299,8 @@ public class CafeDao {
             dto.setContent(rs.getString("content"));
             dto.setViewCount(rs.getInt("viewCount"));
             dto.setRegdate(rs.getString("regdate"));
+            dto.setPrevNum(rs.getInt("prevNum"));
+            dto.setNextNum(rs.getInt("nextNum"));
          }
       } catch (Exception e) {
          e.printStackTrace();

@@ -10,11 +10,14 @@ public class CafeDto {
 	//페이징 처리를 위한 필드
 	private int startRowNum;
 	private int endRowNum;
+	//이전글, 다음글의 글번호를 위한 필드
+	private int prevNum;
+	private int nextNum;
 	
 	public CafeDto() {}
 
 	public CafeDto(int num, String writer, String title, String content, int viewCount, String regdate, int startRowNum,
-			int endRowNum) {
+			int endRowNum, int prevNum, int nextNum) {
 		super();
 		this.num = num;
 		this.writer = writer;
@@ -24,6 +27,8 @@ public class CafeDto {
 		this.regdate = regdate;
 		this.startRowNum = startRowNum;
 		this.endRowNum = endRowNum;
+		this.prevNum = prevNum;
+		this.nextNum = nextNum;
 	}
 
 	public int getNum() {
@@ -89,6 +94,20 @@ public class CafeDto {
 	public void setEndRowNum(int endRowNum) {
 		this.endRowNum = endRowNum;
 	}
-	
-	
+
+	public int getPrevNum() {
+		return prevNum;
+	}
+
+	public void setPrevNum(int prevNum) {
+		this.prevNum = prevNum;
+	}
+
+	public int getNextNum() {
+		return nextNum;
+	}
+
+	public void setNextNum(int nextNum) {
+		this.nextNum = nextNum;
+	}
 }

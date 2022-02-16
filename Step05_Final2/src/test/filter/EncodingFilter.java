@@ -17,13 +17,13 @@ public class EncodingFilter implements Filter {
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		
+
 		//1. 만일 인코딩 설정이 되지 않았다면
 		if(request.getCharacterEncoding()==null) {
 			request.setCharacterEncoding("utf-8");
@@ -35,7 +35,7 @@ public class EncodingFilter implements Filter {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
