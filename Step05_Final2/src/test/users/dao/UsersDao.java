@@ -173,12 +173,13 @@ public class UsersDao {
 			conn = new DbcpBean().getConn();
 			//실행할 insert, update, delete 문 구성
 			String sql = "UPDATE users"
-					+ " SET email=?"
+					+ " SET email=?, profile=?"
 					+ " WHERE id=?";
 			pstmt = conn.prepareStatement(sql);
 			//? 에 바인딩할 내용이 있으면 바인딩한다.
 			pstmt.setString(1, dto.getEmail());
-			pstmt.setString(2, dto.getId());
+			pstmt.setString(2, dto.getProfile());
+			pstmt.setString(3, dto.getId());
 			flag = pstmt.executeUpdate(); //sql 문 실행하고 변화된 row 갯수 리턴 받기
 		} catch (Exception e) {
 			e.printStackTrace();
