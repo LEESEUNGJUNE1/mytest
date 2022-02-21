@@ -18,6 +18,3 @@
 	<a href="test05.jsp?msg=hello">test05.jsp</a>
 </body>
 </html>
-
-
-
